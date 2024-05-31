@@ -196,15 +196,14 @@ class WebServer {
         } else if (request.contains("multiply?")) {
           // This multiplies two numbers
           Map<String, String> query_pairs = new LinkedHashMap<String, String>();
-          //check for zero parameters
-          if (request.equals("")){
-            // failure
-            builder.append("HTTP/1.1 400 Bad Request\n");
-            builder.append("Content-Type: text/html; charset=utf-8\n");
-            builder.append("\n");
-            builder.append("Invalid number of parameters. Enter two parameters to multiply.");
-          }
-          else{
+            if(request.equals("multiply?")) {
+                // failure
+                builder.append("HTTP/1.1 400 Bad Request\n");
+                builder.append("Content-Type: text/html; charset=utf-8\n");
+                builder.append("\n");
+                builder.append("Invalid number of parameters. Enter two parameters to multiply.");
+              }
+            else{
               query_pairs = splitQuery(request.replace("multiply?", "")); 
               //check for null character
               if (query_pairs.get("num1") != null && query_pairs.get("num2") != null){
@@ -225,8 +224,8 @@ class WebServer {
                 builder.append("Content-Type: text/html; charset=utf-8\n");
                 builder.append("\n");
                 builder.append("Invalid number of parameters. Enter two parameters to multiply.");
-              }   
-          }
+              }
+            }  
 
         } else if (request.contains("github?")) {
           // pulls the query from the request and runs it with GitHub's REST API
@@ -264,8 +263,8 @@ class WebServer {
         
           //simulate rolling
           Random rand = new Random();
-          Integer result1 = rand.nextInt(die1);
-          Integer result2 = rand.nextInt(die2);
+          Integer result1 = 1 + rand.nextInt(die1);
+          Integer result2 = 1 + rand.nextInt(die2);
 
           // Generate response
           builder.append("HTTP/1.1 200 OK\n");
