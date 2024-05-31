@@ -201,7 +201,7 @@ class WebServer {
           query_pairs = splitQuery(request.replace("multiply?", ""));
 
           //check if query_pairs is null --> user did not enter any params
-          if(query_pairs.isEmpty() || query_pairs == null){
+          if(query_pairs == null){
              // failure
             builder.append("HTTP/1.1 400 Bad Request\n");
             builder.append("Content-Type: text/html; charset=utf-8\n");
