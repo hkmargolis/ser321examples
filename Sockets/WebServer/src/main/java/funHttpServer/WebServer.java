@@ -194,8 +194,7 @@ class WebServer {
             builder.append("File not found: " + file);
           }
         } else if (request.contains("multiply?")) {
-          // This multiplies two numbers, there is NO error handling, so when
-          // wrong data is given this just crashes
+          // This multiplies two numbers
 
           Map<String, String> query_pairs = new LinkedHashMap<String, String>();
           // extract path parameters
@@ -224,10 +223,7 @@ class WebServer {
           builder.append("\n");
           builder.append("Invalid number of parameters. Enter two parameters to multiply.");
           
-        }         
-
-          // TODO: Include error handling here with a correct error code and
-          // a response that makes sense
+        }
 
         } else if (request.contains("github?")) {
           // pulls the query from the request and runs it with GitHub's REST API
@@ -250,7 +246,38 @@ class WebServer {
           // TODO: Parse the JSON returned by your fetch and create an appropriate
           // response based on what the assignment document asks for
 
-        } else {
+        }
+        else if (request.contains("rollDice?")) {
+          Map<String, String> query_pairs = new LinkedHashMap<String, String>();
+          //This rolls two dice, user must input number of sides each dice have.
+          query_pairs = splitQuery(request.replace("rollDice?", ""));
+
+          //check for null character
+          if (query_pairs.get("die1") != null && query_pairs.get("die2") != null){
+          
+          // extract required fields from parameters
+          Integer die1 = Integer.parseInt(query_pairs.get("die1"));
+          Integer die2 = Integer.parseInt(query_pairs.get("die2"));
+        
+          //simulate rolling
+          Random rand = new Random();
+          Integer result1 = rand.nextInt(die1);
+          Integer result2 = rand.nextInt(die2);
+
+          // Generate response
+          builder.append("HTTP/1.1 200 OK\n");
+          builder.append("Content-Type: text/html; charset=utf-8\n");
+          builder.append("\n");
+          builder.append("Die1: " + result1 + "/" + die1 + "Die2: " + result2 + "/" + die2);
+        }
+        else{
+          // failure
+          builder.append("HTTP/1.1 400 Bad Request\n");
+          builder.append("Content-Type: text/html; charset=utf-8\n");
+          builder.append("\n");
+          builder.append("Invalid parameters. Enter how many sides each die has i.e. /rollDice?die1=6&die2=20");
+        }
+        }else {
           // if the request is not recognized at all
 
           builder.append("HTTP/1.1 400 Bad Request\n");
