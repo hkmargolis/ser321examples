@@ -200,8 +200,17 @@ class WebServer {
           // extract path parameters
           query_pairs = splitQuery(request.replace("multiply?", ""));
 
+          //check if query_pairs is null --> user did not enter any params
+          if(query_pairs.isEmpty()){
+             // failure
+            builder.append("HTTP/1.1 400 Bad Request\n");
+            builder.append("Content-Type: text/html; charset=utf-8\n");
+            builder.append("\n");
+            builder.append("Invalid number of parameters. Enter two parameters to multiply.");
+          }
+
           //check for null character
-          if (query_pairs.get("num1") != null && query_pairs.get("num2") != null){
+          else if (query_pairs.get("num1") != null && query_pairs.get("num2") != null){
           
           // extract required fields from parameters
           Integer num1 = Integer.parseInt(query_pairs.get("num1"));
