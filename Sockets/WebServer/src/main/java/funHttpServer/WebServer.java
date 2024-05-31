@@ -271,7 +271,7 @@ class WebServer {
               builder.append("Invalid parameters. Enter how many sides each die has i.e. /rollDice?die1=6&die2=20");
           }
         }
-        else if (request.contains("equal?")) {
+        else if (request.contains("equalStrings?")) {
             Map<String, String> query_pairs = new LinkedHashMap<String, String>();
             //This tells you if two words are equal.
             query_pairs = splitQuery(request.replace("equal?", ""));
@@ -301,7 +301,6 @@ class WebServer {
         
         }else {
           // if the request is not recognized at all
-
           builder.append("HTTP/1.1 400 Bad Request\n");
           builder.append("Content-Type: text/html; charset=utf-8\n");
           builder.append("\n");
@@ -328,12 +327,14 @@ class WebServer {
   public static Map<String, String> splitQuery(String query) throws UnsupportedEncodingException {
     Map<String, String> query_pairs = new LinkedHashMap<String, String>();
     // "q=hello+world%2Fme&bob=5"
-    String[] pairs = query.split("&");
-    // ["q=hello+world%2Fme", "bob=5"]
-    for (String pair : pairs) {
-      int idx = pair.indexOf("=");
-      query_pairs.put(URLDecoder.decode(pair.substring(0, idx), "UTF-8"),
-          URLDecoder.decode(pair.substring(idx + 1), "UTF-8"));
+    if(!query_pairs.isEmpty()) {
+      String[] pairs = query.split("&");
+      // ["q=hello+world%2Fme", "bob=5"]
+      for (String pair : pairs) {
+        int idx = pair.indexOf("=");
+        query_pairs.put(URLDecoder.decode(pair.substring(0, idx), "UTF-8"),
+                URLDecoder.decode(pair.substring(idx + 1), "UTF-8"));
+      }
     }
     // {{"q", "hello world/me"}, {"bob","5"}}
     return query_pairs;
