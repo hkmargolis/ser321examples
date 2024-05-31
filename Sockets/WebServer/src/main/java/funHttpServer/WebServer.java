@@ -231,8 +231,9 @@ class WebServer {
           Map<String, String> query_pairs = new LinkedHashMap<String, String>();
           query_pairs = splitQuery(request.replace("github?", ""));
           String json = fetchURL("https://api.github.com/" + query_pairs.get("query"));
-          System.out.println(json);
-
+          //System.out.println(json);
+          String[] id = json.split("\"id\"");
+          System.out.println(id[0]);
           builder.append("HTTP/1.1 200 OK\n");
           builder.append("Content-Type: text/html; charset=utf-8\n");
           builder.append("\n");
@@ -274,16 +275,16 @@ class WebServer {
         else if (request.contains("equalStrings?")) {
             Map<String, String> query_pairs = new LinkedHashMap<String, String>();
             //This tells you if two words are equal.
-            query_pairs = splitQuery(request.replace("equal?", ""));
+            query_pairs = splitQuery(request.replace("equalStrings?", ""));
 
             //check for null character
-            if (query_pairs.get("word1") != null && query_pairs.get("word2") != null){
+            if (query_pairs.get("s1") != null && query_pairs.get("s2") != null){
               // extract required fields from parameters
-              String word1 = query_pairs.get("word1");
-              String word2 = query_pairs.get("word2");
+              String s1 = query_pairs.get("s1");
+              String s2 = query_pairs.get("s2");
             
               //check if words are equal
-              Boolean result = word1.equalsIgnoreCase(word2);
+              Boolean result = s1.equalsIgnoreCase(s2);
 
               // Generate response
               builder.append("HTTP/1.1 200 OK\n");
@@ -296,7 +297,7 @@ class WebServer {
               builder.append("HTTP/1.1 400 Bad Request\n");
               builder.append("Content-Type: text/html; charset=utf-8\n");
               builder.append("\n");
-              builder.append("Invalid parameters. Enter two words i.e. /equal?word1=happy&word2=HAPPY");
+              builder.append("Invalid parameters. Enter two words i.e. /equalStrings?s1=happy&s2=HAPPY");
           }
         
         }else {
