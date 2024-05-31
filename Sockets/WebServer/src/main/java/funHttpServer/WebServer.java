@@ -196,15 +196,8 @@ class WebServer {
         } else if (request.contains("multiply?")) {
           // This multiplies two numbers
           Map<String, String> query_pairs = new LinkedHashMap<String, String>();
-            if(request.equals("multiply?")) {
-                // failure
-                builder.append("HTTP/1.1 400 Bad Request\n");
-                builder.append("Content-Type: text/html; charset=utf-8\n");
-                builder.append("\n");
-                builder.append("Invalid number of parameters. Enter two parameters to multiply.");
-              }
-            else{
-              query_pairs = splitQuery(request.replace("multiply?", "")); 
+          query_pairs = splitQuery(request.replace("multiply?", "")); 
+              
               //check for null character
               if (query_pairs.get("num1") != null && query_pairs.get("num2") != null){
                 // extract required fields from parameters
@@ -224,8 +217,7 @@ class WebServer {
                 builder.append("Content-Type: text/html; charset=utf-8\n");
                 builder.append("\n");
                 builder.append("Invalid number of parameters. Enter two parameters to multiply.");
-              }
-            }  
+              }  
 
         } else if (request.contains("github?")) {
           // pulls the query from the request and runs it with GitHub's REST API
@@ -250,35 +242,63 @@ class WebServer {
 
         }
         else if (request.contains("rollDice?")) {
-          Map<String, String> query_pairs = new LinkedHashMap<String, String>();
-          //This rolls two dice, user must input number of sides each dice have.
-          query_pairs = splitQuery(request.replace("rollDice?", ""));
+            Map<String, String> query_pairs = new LinkedHashMap<String, String>();
+            //This rolls two dice, user must input number of sides each dice have.
+            query_pairs = splitQuery(request.replace("rollDice?", ""));
 
-          //check for null character
-          if (query_pairs.get("die1") != null && query_pairs.get("die2") != null){
-          
-          // extract required fields from parameters
-          Integer die1 = Integer.parseInt(query_pairs.get("die1"));
-          Integer die2 = Integer.parseInt(query_pairs.get("die2"));
+            //check for null character
+            if (query_pairs.get("die1") != null && query_pairs.get("die2") != null){
+              // extract required fields from parameters
+              Integer die1 = Integer.parseInt(query_pairs.get("die1"));
+              Integer die2 = Integer.parseInt(query_pairs.get("die2"));
+            
+              //simulate rolling
+              Random rand = new Random();
+              Integer result1 = 1 + rand.nextInt(die1);
+              Integer result2 = 1 + rand.nextInt(die2);
+
+              // Generate response
+              builder.append("HTTP/1.1 200 OK\n");
+              builder.append("Content-Type: text/html; charset=utf-8\n");
+              builder.append("\n");
+              builder.append("D" + die1 + ": " + result1 + " D"+ die2 + ": " + result2);
+            }
+            else{
+              // failure
+              builder.append("HTTP/1.1 400 Bad Request\n");
+              builder.append("Content-Type: text/html; charset=utf-8\n");
+              builder.append("\n");
+              builder.append("Invalid parameters. Enter how many sides each die has i.e. /rollDice?die1=6&die2=20");
+          }
+        }
+        else if (request.contains("equal?")) {
+            Map<String, String> query_pairs = new LinkedHashMap<String, String>();
+            //This tells you if two words are equal.
+            query_pairs = splitQuery(request.replace("equal?", ""));
+
+            //check for null character
+            if (query_pairs.get("word1") != null && query_pairs.get("word2") != null){
+              // extract required fields from parameters
+              String word1 = query_pairs.get("word1");
+              String word2 = query_pairs.get("word2");
+            
+              //check if words are equal
+              Boolean result = word1.equalsIgnoreCase(word2);
+
+              // Generate response
+              builder.append("HTTP/1.1 200 OK\n");
+              builder.append("Content-Type: text/html; charset=utf-8\n");
+              builder.append("\n");
+              builder.append(result);
+            }
+            else{
+              // failure
+              builder.append("HTTP/1.1 400 Bad Request\n");
+              builder.append("Content-Type: text/html; charset=utf-8\n");
+              builder.append("\n");
+              builder.append("Invalid parameters. Enter two words i.e. /equal?word1=happy&word2=HAPPY");
+          }
         
-          //simulate rolling
-          Random rand = new Random();
-          Integer result1 = 1 + rand.nextInt(die1);
-          Integer result2 = 1 + rand.nextInt(die2);
-
-          // Generate response
-          builder.append("HTTP/1.1 200 OK\n");
-          builder.append("Content-Type: text/html; charset=utf-8\n");
-          builder.append("\n");
-          builder.append("D" + die1 + ": " + result1 + " D"+ die2 + ": " + result2);
-        }
-        else{
-          // failure
-          builder.append("HTTP/1.1 400 Bad Request\n");
-          builder.append("Content-Type: text/html; charset=utf-8\n");
-          builder.append("\n");
-          builder.append("Invalid parameters. Enter how many sides each die has i.e. /rollDice?die1=6&die2=20");
-        }
         }else {
           // if the request is not recognized at all
 
