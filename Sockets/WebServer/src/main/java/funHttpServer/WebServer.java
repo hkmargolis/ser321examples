@@ -231,15 +231,12 @@ class WebServer {
           Map<String, String> query_pairs = new LinkedHashMap<String, String>();
           query_pairs = splitQuery(request.replace("github?", ""));
           String json = fetchURL("https://api.github.com/" + query_pairs.get("query"));
-          //System.out.println(json);
-          String[] id = json.split("\"id\"");
-          System.out.println(id[0]);
+
+          builder.append(customParseJson(json));
           builder.append("HTTP/1.1 200 OK\n");
           builder.append("Content-Type: text/html; charset=utf-8\n");
           builder.append("\n");
           builder.append("Check the todos mentioned in the Java source file");
-          // TODO: Parse the JSON returned by your fetch and create an appropriate
-          // response based on what the assignment document asks for
 
         }
         else if (request.contains("rollDice?")) {
@@ -429,5 +426,36 @@ class WebServer {
       System.out.println("Exception in url request:" + ex.getMessage());
     }
     return sb.toString();
+  }
+
+  public String customParseJson(String json){
+    String[] splitById = json.split("\"id\":");
+    String id = "", full_name = "", login = "";
+    String parsedData = "";
+
+    for(int i = 1; i < splitById.length; i++){
+      int beginning = 0;
+      int ending = splitById[i].indexOf(",\"node_id\":");
+      if(beginning != -1 && ending != -1) {
+        id = splitById[i].substring(beginning, ending);
+      }
+      beginning = splitById[i].indexOf("\"full_name\"");
+      ending = splitById[i].indexOf(",\"private\"");
+      if(beginning != -1 && ending != -1) {
+        full_name = splitById[i].substring(beginning, ending);
+      }
+
+      beginning = splitById[i].indexOf("\"login\":");
+      ending = splitById[i].lastIndexOf(",");
+      if(beginning != -1 && ending != -1) {
+        login = splitById[i].substring(beginning,ending);
+      }
+      parsedData += ("Repo " + i + "\n");
+      parsedData += (full_name + " ");
+      parsedData += ("\"id\":" + id + " ");
+      parsedData += (login + "\n");
+
+    }
+    return parsedData;
   }
 }
