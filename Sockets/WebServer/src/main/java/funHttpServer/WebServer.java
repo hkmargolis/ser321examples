@@ -231,13 +231,13 @@ class WebServer {
           Map<String, String> query_pairs = new LinkedHashMap<String, String>();
           query_pairs = splitQuery(request.replace("github?", ""));
           String json = fetchURL("https://api.github.com/" + query_pairs.get("query"));
+          String parsedData = customParseJson(json);
 
-          builder.append(customParseJson(json));
           builder.append("HTTP/1.1 200 OK\n");
           builder.append("Content-Type: text/html; charset=utf-8\n");
           builder.append("\n");
-          builder.append("Check the todos mentioned in the Java source file");
-
+          //builder.append("Check the todos mentioned in the Java source file");
+          builder.append(parsedData);
         }
         else if (request.contains("rollDice?")) {
             Map<String, String> query_pairs = new LinkedHashMap<String, String>();
