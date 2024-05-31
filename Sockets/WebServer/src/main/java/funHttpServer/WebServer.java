@@ -202,7 +202,7 @@ class WebServer {
           query_pairs = splitQuery(request.replace("multiply?", ""));
 
           //check for null character
-          if (query_pairs.get("num1") != null && query_pairs.get("num2" != null){
+          if (query_pairs.get("num1") != null && query_pairs.get("num2") != null){
           
           // extract required fields from parameters
           Integer num1 = Integer.parseInt(query_pairs.get("num1"));
