@@ -428,33 +428,36 @@ class WebServer {
     return sb.toString();
   }
 
-  public String customParseJson(String json){
+  public String customParseJson(String json) {
     String[] splitById = json.split("\"id\":");
-    String id = "", full_name = "", login = "";
     String parsedData = "";
+    int repoCount = 1;
 
-    for(int i = 1; i < splitById.length; i++){
+    for (int i = 1; i < splitById.length; i++) {
+      String id = "", full_name = "", login = "";
       int beginning = 0;
       int ending = splitById[i].indexOf(",\"node_id\":");
-      if(beginning != -1 && ending != -1) {
+      if (beginning != -1 && ending != -1) {
         id = splitById[i].substring(beginning, ending);
       }
       beginning = splitById[i].indexOf("\"full_name\"");
       ending = splitById[i].indexOf(",\"private\"");
-      if(beginning != -1 && ending != -1) {
+      if (beginning != -1 && ending != -1) {
         full_name = splitById[i].substring(beginning, ending);
       }
 
       beginning = splitById[i].indexOf("\"login\":");
       ending = splitById[i].lastIndexOf(",");
-      if(beginning != -1 && ending != -1) {
-        login = splitById[i].substring(beginning,ending);
+      if (beginning != -1 && ending != -1) {
+        login = splitById[i].substring(beginning, ending);
       }
-      parsedData += ("Repo " + i + "\n");
-      parsedData += (full_name + " ");
-      parsedData += ("\"id\":" + id + " ");
-      parsedData += (login + "\n");
-
+      if (!full_name.equals("") && !id.equals("") && !login.equals("")) {
+        parsedData += ("REPOSITORY " + repoCount + "\n");
+        parsedData += (full_name + " ");
+        parsedData += ("\"id\":" + id + " ");
+        parsedData += (login + "\n");
+        repoCount++;
+      }
     }
     return parsedData;
   }
