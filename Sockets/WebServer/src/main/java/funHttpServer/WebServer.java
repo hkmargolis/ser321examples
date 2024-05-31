@@ -197,6 +197,8 @@ class WebServer {
           // This multiplies two numbers
 
           Map<String, String> query_pairs = new LinkedHashMap<String, String>();
+          // extract path parameters (1 to many params)
+          query_pairs = splitQuery(request.replace("multiply?", "")); 
           
           //check for zero parameters
           if (request.equals("")){
@@ -206,9 +208,6 @@ class WebServer {
             builder.append("\n");
             builder.append("Invalid number of parameters. Enter two parameters to multiply.");
           }
-
-          // extract path parameters (1 to many params)
-          query_pairs = splitQuery(request.replace("multiply?", "")); 
 
           //check for null character
           else if (query_pairs.get("num1") != null && query_pairs.get("num2") != null){
